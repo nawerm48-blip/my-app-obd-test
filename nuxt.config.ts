@@ -1,5 +1,48 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // FSD Architecture: Source directory configuration
+  srcDir: 'src/',
+  
+  // FSD: Directory mappings
+  dir: {
+    pages: '../pages',       // Keep pages at root level for Nuxt routing
+    layouts: 'app/layouts',
+    middleware: 'app/middleware',
+    plugins: '../plugins',   // Keep plugins at root level
+  },
+
+  // FSD: Component auto-imports from all layers
+  components: [
+    // Shared UI components (prefix: Shared)
+    { path: '~/shared/ui', prefix: 'Shared', pathPrefix: false },
+    // Entity UI components (prefix: Entity)
+    { path: '~/entities', prefix: 'Entity', pathPrefix: true, extensions: ['vue'] },
+    // Feature UI components (prefix: Feature) 
+    { path: '~/features', prefix: 'Feature', pathPrefix: true, extensions: ['vue'] },
+    // Widget components (prefix: Widget)
+    { path: '~/widgets', prefix: 'Widget', pathPrefix: true, extensions: ['vue'] },
+    // Legacy components (for gradual migration)
+    { path: '../components', pathPrefix: false },
+  ],
+
+  // FSD: Auto-imports for composables and utilities
+  imports: {
+    dirs: [
+      // Shared layer
+      'shared/lib',
+      'shared/api',
+      'shared/config',
+      // Entity layer APIs and models
+      'entities/**/api',
+      'entities/**/model',
+      // Feature layer APIs and models  
+      'features/**/api',
+      'features/**/model',
+      // Legacy store (for gradual migration)
+      '../store',
+    ],
+  },
+
   app: {
     head: {
       htmlAttrs: {
